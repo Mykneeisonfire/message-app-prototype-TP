@@ -2,10 +2,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/connection");
-const userRoutes = require("./routes/userRoutes");
-const chatRoutes = require("./routes/chatRoutes");
-const messageRoutes = require("./routes/messageRoutes");
-const { notFound, errorHandler } = require("./middleware/errorMiddleware");
+const routes = require("./routes");
 
 const path = require('path');
 
@@ -26,19 +23,54 @@ dotenv.config();
 connectDB();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ==========================================================
+// Routing
+// ==========================================================
+app.use(routes);
+// ==========================================================
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../client/build")));
+}
 
 app.get("/", (req, res) => {
-  res.send("API running successfully!");
+  res.sendFile(path.join(__dirname, "../client/build/index.html"));
 });
 
-app.use("/api/user", userRoutes);
-app.use("/api/chat", chatRoutes);
-app.use("/api/messages", messageRoutes);
-
-app.use(notFound);
-app.use(errorHandler);
-
 const PORT = process.env.PORT || 3001;
+
+// Use app.listen() as an object we can pass through socket.io
+const server = app.listen(PORT, () => {
+  console.log(`API server running on ${PORT}`);
+});
+
+// ==========================================================
+// ==========================================================
+// Socket.io
+// ==========================================================
+// ==========================================================
+const io = require("socket.io")(server, {
+  // If a user hasn't sent anything in 60 seconds, close the connection to save the bandwidth
+  pingTimeout: 60000,
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("connected to socket.io");
+  socket.on("chat message", message => {
+    io.emit("chat message", message);
+  });
+
+  // Typing
+  socket.on("typing", (room) => socket.in(room).emit("typing"));
+  socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
+
+  });
+
 
 const startApolloServer = async (typeDefs, resolvers) => {
   await server.start();

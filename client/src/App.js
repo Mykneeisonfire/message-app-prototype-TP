@@ -1,5 +1,5 @@
 import "./App.css";
-import { Route } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import Homepage from "./Pages/Homepage";
 import ChatPage from "./Pages/ChatPage";
 import React from 'react';
@@ -12,11 +12,13 @@ const client = new ApolloClient({
 
 function App() {
   return (
-<ApolloProvider client={client}>
+    <ApolloProvider client={client}>
   <div className="App">
-    <Route path="/" component={Homepage} exact/>
-    <Route path="/chats" component={ChatPage} />
-  </div>
+      <Switch>
+            <Route path="/" component={Homepage} exact />
+            <Route path="/chats" component={ChatPage} />
+      </Switch>
+      </div>
 </ApolloProvider>
   );
 }

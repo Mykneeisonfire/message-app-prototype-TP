@@ -1,18 +1,21 @@
-import { Box, Button, Stack, useToast, Text } from "@chakra-ui/react";
+import { Box, Stack, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { ChatState } from "../Context/chatProvider";
-import { AddIcon } from "@chakra-ui/icons";
 import Loading from "./Loading";
-import { getSender } from "../config/ChatFunctions";
-import GroupChatModal from "./elements/GroupChatModal";
 
-const MyChats = ({ fetchAgain }) => {
+// ==========================================================
+// Load chats and the users in them
+// ==========================================================
+const MyChats = ({ _id }) => {
   const [loggedUser, setLoggedUser] = useState();
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
 
   const toast = useToast();
 
+  // ==========================================================
+  // Load all chats
+  // ==========================================================
   const allChats = async () => {
     try {
       const config = {
@@ -21,7 +24,7 @@ const MyChats = ({ fetchAgain }) => {
         },
       };
 
-      const { data } = await axios.get("/api/chat", config);
+      const { data } = await axios.get("/api/chats", config);
       setChats(data);
     } catch (error) {
       toast({
@@ -37,8 +40,14 @@ const MyChats = ({ fetchAgain }) => {
 
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
+    console.log(loggedUser);
     allChats();
-  }, [fetchAgain]);
+    // eslint-disable-next-line
+  }, []);
+
+  // ==========================================================
+  // Output
+  // ==========================================================
 
   return (
     <Box
@@ -64,16 +73,6 @@ const MyChats = ({ fetchAgain }) => {
         alignItems="center"
       >
         My Chats
-        <GroupChatModal>
-          <Button
-            d="flex"
-            ml="5%"
-            fontSize={{ base: "17px", md: "10px", lg: "17px" }}
-            rightIcon={<AddIcon />}
-          >
-            New Group Chat
-          </Button>
-        </GroupChatModal>
       </Box>
 
       <Box
@@ -85,25 +84,21 @@ const MyChats = ({ fetchAgain }) => {
         h="100%"
         borderRadius="lg"
         overflowY="hidden"
+        key={_id}
       >
         {chats ? (
           <Stack overflowY="scroll">
-            {chats.map((chat) => (
+            {[...chats].map((_id) => (
               <Box
-                onClick={() => setSelectedChat(chat)}
+                onClick={() => setSelectedChat(_id)}
                 cursor="pointer"
-                bg={selectedChat === chat ? "#38B2AC" : "#E8E8E8"}
-                color={selectedChat === chat ? "white" : "black"}
+                bg={selectedChat === _id ? "#38B2AC" : "#E8E8E8"}
+                color={selectedChat === _id ? "white" : "black"}
                 px={3}
                 py={2}
                 borderRadius="lg"
-                key={chat._id}
+                value={_id}
               >
-                <Text>
-                  {!chat.isGroupChat
-                    ? getSender(loggedUser, chat.users)
-                    : chat.chatName}
-                </Text>
               </Box>
             ))}
           </Stack>

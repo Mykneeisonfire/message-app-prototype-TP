@@ -4,7 +4,8 @@
   "description": "A messaging app that uses React, MERN Stack, Express, MongoDB, Apollo, and GraphQL",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server/server.js"
+    "watch": "nodemon server.js",
+    "start": "node server.js"
   },
   "author": "Stephanie Cambria, Joyce Chen, Caleb Lacson, Tyler Porter",
   "license": "ISC",
@@ -20,7 +21,8 @@
     "framer-motion": "^7.6.19",
     "graphql": "^16.6.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.8.0"
+    "mongoose": "^6.8.0",
+    "socket.io": "^4.5.4"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"

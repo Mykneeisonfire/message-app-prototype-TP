@@ -5,14 +5,6 @@ function Loading() {
   return (
     <Stack>
       <Skeleton height="40px" />
-      <Skeleton height="40px" />
-      <Skeleton height="40px" />
-      <Skeleton height="40px" />
-      <Skeleton height="40px" />
-      <Skeleton height="40px" />
-      <Skeleton height="40px" />
-      <Skeleton height="40px" />
-      <Skeleton height="40px" />
     </Stack>
   );
 }

@@ -11,13 +11,13 @@ const User = require("../models/User");
 const sendMessage = asyncHandler(async (req, res) => {
   const { content, chatId } = req.body;
 
-  if (!content || !chatId) {
+  if (!content) {
     console.log("Invalid data");
     return res.sendStatus(400);
   }
 
   let newMessage = {
-    sender: req.user._id,
+    sender: req.user,
     content: content,
     chat: chatId,
   };
@@ -35,7 +35,8 @@ const sendMessage = asyncHandler(async (req, res) => {
     res.json(message);
   } catch (error) {
     res.status(400);
-    throw new Error(error.message);
+    res.statusMessage;
+    res.send();
   }
 });
 
@@ -52,7 +53,8 @@ const allMessages = asyncHandler(async (req, res) => {
     res.json(messages);
   } catch (error) {
     res.status(400);
-    throw new Error(error.message);
+    res.statusMessage;
+    res.send();
   }
 });
 

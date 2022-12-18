@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-// import { useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 // Creating a context hook to use throughout the app
 const ChatContext = createContext();
@@ -8,16 +8,15 @@ const ChatProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [selectedChat, setSelectedChat] = useState();
   const [chats, setChats] = useState();
-  // const history = useHistory();
+  const history = useHistory();
 
-  // useEffect(() => {
-  // Grabbing the user info from local storage that gets set during the login and signup process
-  //  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-  //  setUser(userInfo);
+  useEffect(() => {
+    // Grabbing the user info from local storage that gets set during the login and signup process
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    setUser(userInfo);
 
-  //   if (!userInfo) history.push("/");
-
-  // }, [history]);
+    //if (!userInfo) history.push("/");
+  }, [history]);
 
   return (
     <ChatContext.Provider
