@@ -13,7 +13,7 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-  <div className="App">
+      <div className="App">
       <Switch>
             <Route path="/" component={Homepage} exact />
             <Route path="/chats" component={ChatPage} />
